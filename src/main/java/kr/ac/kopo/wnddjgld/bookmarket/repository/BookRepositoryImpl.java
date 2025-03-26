@@ -31,15 +31,15 @@ public class BookRepositoryImpl implements BookRepository {
         book2.setBookId("isbn0002");
         book2.setName("Android Studio를 활용한 안드로이드 프로그래밍");
         book2.setUnitPrice(BigDecimal.valueOf(34000));
-        book1.setDescription("이 책은 대학교나 IT 전문학원의 안드로이드 프로그래밍 과목 수강생을 대상으로 한다. " +
+        book2.setDescription("이 책은 대학교나 IT 전문학원의 안드로이드 프로그래밍 과목 수강생을 대상으로 한다. " +
                 "기본적인 프로그래밍을 접해본 독자라면 Java 기초부터 시작하여 안드로이드 앱 개발까지 한번에 학습할 수 있도록 구성되어 있다. " +
                 "특별히 이번 9판에서는 버전업을 적용하여 JDK 17, Android 14.0(U), Android Studio Hedgehog에서 실습할 수 있다. 또한 연습문제 일부를 변경하였으며, " +
                 "13장에 ‘경기도 맛집 찾기 앱 만들기’ 프로젝트를 추가하였다. ");
-        book1.setPublisher("한빛아카데미");
-        book1.setCategory("IT교재");
-        book1.setUnitsInStock(800);
-        book1.setReleaseDate("2024/01/19");
-        book1.setCondition("신규도서");
+        book2.setPublisher("한빛아카데미");
+        book2.setCategory("IT교재");
+        book2.setUnitsInStock(800);
+        book2.setReleaseDate("2024/01/19");
+        book2.setCondition("신규도서");
 
         Book book3 = new Book();
         book3.setBookId("isbn0003");
