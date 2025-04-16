@@ -46,7 +46,9 @@ public class BookRepositoryImpl implements BookRepository {
         book3.setName("혼자 공부하는 머신러닝 딥러닝");
         book3.setUnitPrice(BigDecimal.valueOf(25000));
         book3.setAuthor("박해선");
-        book3.setDescription("이 책은 수식과 이론으로 중무장한 머신러닝, 딥러닝 책에 지친 ‘독학하는 입문자’가 ‘꼭 필요한 내용을 제대로’ 학습할 수 있도록 구성했다.");
+        book3.setDescription("이 책은 수식과 이론으로 중무장한 머신러닝, 딥러닝 책에 지친 ‘독학하는 입문자’가 ‘꼭 필요한 내용을 제대로’ 학습할 수 있도록 구성했다. " +
+                "이 책은 수식과 이론으로 중무장한 머신러닝, 딥러닝 책에 지친 ‘독학하는 입문자’가 ‘꼭 필요한 내용을 제대로’ 학습할 수 있도록 구성했다. "+
+                "이 책은 수식과 이론으로 중무장한 머신러닝, 딥러닝 책에 지친 ‘독학하는 입문자’가 ‘꼭 필요한 내용을 제대로’ 학습할 수 있도록 구성했다. ");
         book3.setPublisher("한빛아카데미");
         book3.setCategory("IT전문서");
         book3.setUnitsInStock(1000);
@@ -76,6 +78,16 @@ public class BookRepositoryImpl implements BookRepository {
             throw new IllegalArgumentException("도서번호가 " + bookId + "인 해당 도서를 찾을 수 없습니다.");
         }
 
-        return null;
+        return bookInfo;
+    }
+
+    @Override
+    public List<Book> getBookListByCategory(String category) {
+        List<Book> booksByCategory = new ArrayList<>();
+        for (Book book : listOfBooks) {
+            if (book.getCategory() != null && book.getCategory().equals(category)) {
+                booksByCategory.add(book);
+        }}
+        return booksByCategory;
     }
 }
