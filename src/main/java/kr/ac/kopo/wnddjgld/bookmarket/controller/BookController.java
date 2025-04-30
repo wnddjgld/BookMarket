@@ -5,6 +5,7 @@ import kr.ac.kopo.wnddjgld.bookmarket.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -55,5 +56,23 @@ public class BookController {
         Set<Book> booksByFilter = bookService.getBookListByFilter(bookFilter);
         model.addAttribute("bookList", booksByFilter);
         return "books";
+    }
+    @GetMapping("/add")
+    public String requestAddBookForm() {
+        return "addBook";
+    }
+
+    @PostMapping("/add")
+    public String requestSubmitNewBook(@ModelAttribute("book") Book book) {
+        bookService.setNewBook(book);
+        return "redirect:/books";
+    }
+    @ModelAttribute
+    public void setModelAttributes(Model model) {
+        model.addAttribute("addTitle", "신규 도서 등록");
+    }
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.setAllowedFields("bookId", "Name", "unitPrice", "author", "description", "publisher", "category", "unitsInStock", "releaseDate", "condition");
     }
 }
