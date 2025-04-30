@@ -4,8 +4,8 @@ import kr.ac.kopo.wnddjgld.bookmarket.domain.Book;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Filter;
 
 @Repository
 public class BookRepositoryImpl implements BookRepository {
@@ -88,6 +88,34 @@ public class BookRepositoryImpl implements BookRepository {
             if (book.getCategory() != null && book.getCategory().equals(category)) {
                 booksByCategory.add(book);
         }}
+        return booksByCategory;
+    }
+
+    @Override
+    public Set<Book> getBookSetByFilter(Map<String, List<String>> filter) {
+        Set<Book> booksByPublisher = new HashSet<Book>();
+        Set<Book> booksByCategory = new HashSet<Book>();
+        Set<String> booksByFilter = filter.keySet();
+
+        if(booksByFilter.contains("publisher")){
+            for (int i = 0; i < filter.get("publisher").size(); i++) {
+                String publisherName = filter.get("publisher").get(i);
+                for (Book book : listOfBooks) {
+                    if(publisherName.equalsIgnoreCase(book.getPublisher())){
+                        booksByPublisher.add(book);
+                    }
+                }
+            }
+        }
+        if(booksByFilter.contains("category")){
+            for(int i = 0; i < filter.get("category").size(); i++){
+                String categoryName = filter.get("category").get(i);
+                List<Book> list = getBookListByCategory(categoryName);
+                booksByCategory.addAll(list);
+            }
+        }
+//      저장된 요소 중에서 두 Set의 비교하여 같은값만 남기고 나머지는 제거하는 역할(교집합만 남김)
+        booksByCategory.retainAll(booksByPublisher);
         return booksByCategory;
     }
 }
