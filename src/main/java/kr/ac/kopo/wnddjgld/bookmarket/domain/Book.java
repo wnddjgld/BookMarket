@@ -1,5 +1,6 @@
 package kr.ac.kopo.wnddjgld.bookmarket.domain;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,15 @@ import java.math.BigDecimal;
 //@Setter
 //@NoArgsConstructor
 public class Book {
+    @Pattern(regexp = "isbn[0-9]+]")
     private String bookId; //도서번호
+    @Size(min = 4, max = 50)
     private String Name; //도서명
+    @Min(0)
+    @Digits(integer = 8, fraction = 2)
+    @NotNull
     private BigDecimal unitPrice; //단가
+
     private String author;  //저자
     private String description; //도서설명
     private String publisher; //출판사

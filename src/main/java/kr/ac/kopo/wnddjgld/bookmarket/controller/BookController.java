@@ -1,12 +1,14 @@
 package kr.ac.kopo.wnddjgld.bookmarket.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import kr.ac.kopo.wnddjgld.bookmarket.domain.Book;
 import kr.ac.kopo.wnddjgld.bookmarket.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -69,7 +71,8 @@ public class BookController {
         return "books";
     }
     @GetMapping("/add")
-    public String requestAddBookForm() {
+    public String requestAddBookForm(Model model) {
+        model.addAttribute("book", new Book());
         return "addBook";
     }
 
@@ -82,11 +85,13 @@ public class BookController {
         binder.setAllowedFields("bookId", "Name", "unitPrice", "author", "description", "publisher", "category", "unitsInStock", "releaseDate", "condition", "bookImage");
     }
     @PostMapping("/add")
-    public String submitAddNewBook(@ModelAttribute Book book) {
+    public String submitAddNewBook(@Valid @ModelAttribute Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "addBook";
+        }
         MultipartFile bookImage = book.getBookImage();  // ①
         String saveName = bookImage.getOriginalFilename();  // ②
         File saveFile = new File(fileDir + saveName);
-
         if (bookImage != null && !bookImage.isEmpty()) {
             try {
                 bookImage.transferTo(saveFile);  // ③
