@@ -91,10 +91,10 @@
                 <div class="mb-3 row">
                     <label class="col-sm-2 control-label">도서명</label>
                     <div class="col-sm-3">
-                        <input type="text" name="Name" class="form-control" th:field="*{Name}"/>
+                        <input type="text" name="name" class="form-control" th:field="*{name}"/>
                     </div>
                     <div class="col-sm-6">
-                        <p class="text-danger" th:errors="*{Name}"/>
+                        <p class="text-danger" th:errors="*{name}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
@@ -134,6 +134,9 @@
                     <label class="col-sm-2 control-label">재고량</label>
                     <div class="col-sm-3">
                         <input type="text" name="unitsInStock" class="form-control" th:field="*{unitsInStock}"/>
+                    </div>
+                    <div class="col-sm-6">
+                        <p class="text-danger" th:errors="*{unitsInStock}"/>
                     </div>
                 </div>
                 <div class="mb-3 row">
