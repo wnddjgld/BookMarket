@@ -1,8 +1,11 @@
 package kr.ac.kopo.wnddjgld.bookmarket.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.ac.kopo.wnddjgld.bookmarket.domain.Book;
+import kr.ac.kopo.wnddjgld.bookmarket.exception.BookIdException;
+import kr.ac.kopo.wnddjgld.bookmarket.exception.CategoryException;
 import kr.ac.kopo.wnddjgld.bookmarket.service.BookService;
 import kr.ac.kopo.wnddjgld.bookmarket.validator.BookValidator;
 import kr.ac.kopo.wnddjgld.bookmarket.validator.UnitsInStockValidator;
@@ -18,6 +21,7 @@ import java.io.File;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
 
+import javax.smartcardio.CardException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -68,6 +72,9 @@ public class BookController {
     @GetMapping("/{category}")
     public String requestBookByCategory(@PathVariable String category, Model model) {
         List<Book> booksByCategory = bookService.getBookListByCategory(category);
+        if(booksByCategory == null || booksByCategory.isEmpty()){
+            throw new CategoryException();
+        }
         model.addAttribute("bookList", booksByCategory);
         return "books";
     }
@@ -127,5 +134,15 @@ public class BookController {
         FileCopyUtils.copy(fis, os);
         fis.close();
         os.close();
+    }
+
+    @ExceptionHandler(value = {BookIdException.class})
+    public ModelAndView handleException(HttpServletRequest request, BookIdException e) {
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("invalidBookId", e.getBookId());
+        mav.addObject( "exception", e.toString());
+        mav.addObject("url", request.getRequestURL()+"?"+request.getQueryString());
+        mav.setViewName("errorBook");
+        return mav;
     }
 }
