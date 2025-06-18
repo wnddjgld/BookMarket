@@ -11,10 +11,11 @@ public class LoginController {
         return "login";
     }
     @GetMapping("/loginfailed")
-    public String loginfailed(Model model) {
-        model.addAttribute("error", true);
+    public String loginFailed(Model model) {
+        model.addAttribute("error", "true");
         return "login";
     }
+
     @GetMapping("/logout")
     public String logout() {
         return "login";

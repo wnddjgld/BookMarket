@@ -12,9 +12,9 @@ public class ValidationConfig {
     UnitsInStockValidator unitsInStockValidator;
 
     @Bean
-    public BookValidator bookValidator() {
+    public BookValidator bookValidator(){
         BookValidator bookValidator = new BookValidator();
         bookValidator.springValidators.add(unitsInStockValidator);
-        return bookValidator;
+        return  bookValidator;
     }
 }

@@ -1,7 +1,7 @@
 package kr.ac.kopo.wnddjgld.bookmarket.domain;
 
 import lombok.Data;
-import lombok. ToString;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,10 +16,31 @@ public class Cart {
 
     public Cart() {
         cartItems = new HashMap<String, CartItem>();
-        grandTotal = BigDecimal.ZERO;
+        grandTotal = new BigDecimal(0);//BigDecimal.ZERO
     }
-    public Cart(String cartId){
+
+    public Cart(String cartId) {
         this();
         this.cartId = cartId;
+    }
+
+    public void addCartItem(CartItem item) {
+        String bookId = item.getBook().getBookId();
+
+        if(cartItems.containsKey(bookId)) {
+            CartItem cartItem = cartItems.get(bookId);
+            cartItem.setQuantity(cartItem.getQuantity()+item.getQuantity());
+            cartItems.put(bookId, cartItem);
+        } else {
+            cartItems.put(bookId, item);
+        }
+        updateGrandTotal();
+    }
+    //    전체 주문총액을 업데이트하는 메소드
+    public void updateGrandTotal() {
+        grandTotal = new BigDecimal(0);
+        for(CartItem cartItem : cartItems.values()) {
+            grandTotal = grandTotal.add(cartItem.getTotalPrice());
+        }
     }
 }

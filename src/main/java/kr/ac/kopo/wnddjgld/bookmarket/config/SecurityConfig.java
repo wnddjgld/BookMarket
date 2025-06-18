@@ -18,7 +18,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -33,26 +33,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain FilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/books/add").hasRole("ADMIN")
-                        .anyRequest().permitAll()
+                                .anyRequest().permitAll()
                 )
-//                .formLogin(Customizer.withDefaults());
+//            .formLogin(Customizer.withDefaults());
                 .formLogin(formLogin -> formLogin
-                .loginPage("/login")
-                .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/books/add")
-                .failureUrl("/loginfailed")
-                .usernameParameter("username")
-                .passwordParameter("password")
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/books/add")
+                        .failureUrl("/loginfailed")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
                 )
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                .logout(
+                        logout -> logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/login")
                 );
+
         return http.build();
     }
 }

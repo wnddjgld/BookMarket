@@ -7,14 +7,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class ResourceConfig implements WebMvcConfigurer {
-
-    @Value("${file.uploadDir}") // application.properties에 선언한 파일 저장 위치 설정
+    @Value("${file.uploadDir}")
     String fileDir;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        System.out.println(fileDir);
         registry.addResourceHandler("/images/**")
                 .addResourceLocations("file:///" + fileDir)
-                .setCachePeriod(60 * 60 * 24 * 365); // 정적 파일 캐싱 시간
+                .setCachePeriod(60 * 60 * 24 * 365); //접근 파일 캐싱 시간(초단위), 1년
     }
 }
