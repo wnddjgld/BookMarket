@@ -14,41 +14,53 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig{
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    protected PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+
     @Bean
-    public UserDetailsService users(){
+    protected UserDetailsService users() {
         UserDetails admin = User.builder()
-                .username("admin")
-                .password(passwordEncoder().encode("admin1234"))
+                .username("Admin")
+                .password(passwordEncoder().encode("Admin1234"))
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(admin);
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
+    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+
+                // 특정 URL에 대한 권한 설정.
                 .authorizeHttpRequests(
-                        authorize -> authorize
-                                .requestMatchers("/books/add").hasRole("ADMIN")
+                        authorizeRequests -> authorizeRequests
+                                .requestMatchers("/books/add").hasRole("ADMIN" )
+                                .requestMatchers("/order/list").hasRole("ADMIN" )
                                 .anyRequest().permitAll()
                 )
-//            .formLogin(Customizer.withDefaults());
-                .formLogin(formLogin -> formLogin
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/books/add")
-                        .failureUrl("/loginfailed")
-                        .usernameParameter("username")
-                        .passwordParameter("password")
+                //.formLogin(Customizer.withDefaults());
+                .formLogin(
+                        formLogin->formLogin
+
+                                .loginPage("/login") // 사용자 정의 로그인 페이지
+                                .loginProcessingUrl("/login")
+                                .defaultSuccessUrl("/books/add")// 로그인 성공 후 이동 페이지
+                                .failureUrl("/loginfailed") // 로그인 실패 후 이동 페이지
+                                .usernameParameter("username")
+                                .passwordParameter("password")
+
                 )
+
                 .logout(
                         logout -> logout
                                 .logoutUrl("/logout")
@@ -56,5 +68,38 @@ public class SecurityConfig {
                 );
 
         return http.build();
+
     }
+
+
+
+
+
+   /* @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+    	return(web) -> web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+    */
+    /*
+    @Bean
+    public InMemoryUserDetailsManager userDetailsService() {
+    	 UserDetails user1 = User.withUsername("user1")
+    	            .password(passwordEncoder().encode("user1Pass"))
+    	            .roles("USER")
+    	            .build();
+    	        UserDetails user2 = User.withUsername("user2")
+    	            .password(passwordEncoder().encode("user2Pass"))
+    	            .roles("USER")
+    	            .build();
+
+    	        UserDetails admin = User.withUsername("admin")
+    	            .password(passwordEncoder().encode("adminPass"))
+    	            .roles("ADMIN")
+    	            .build();
+    	       // return new InMemoryUserDetailsManager(user1, user2, admin);
+    	        return new InMemoryUserDetailsManager( admin);
+    }
+    */
+
+
 }

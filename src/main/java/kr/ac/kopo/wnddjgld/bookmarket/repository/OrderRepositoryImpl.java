@@ -8,20 +8,22 @@ import java.util.Map;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
-    private Map<Long, Order> listOfOrders;
+    private Map<Long, Order> listOfOrders ;
     private long nextOrderId;
 
     public OrderRepositoryImpl() {
-        this.listOfOrders = new HashMap<>();
+        listOfOrders = new HashMap<>();
         nextOrderId = 2000;
     }
 
+    //    주문을 저장
     @Override
     public Long saveOrder(Order order) {
-        order.setOrderId(nextOrderId);
+        order.setOrderId(getNextOrderId());
         listOfOrders.put(order.getOrderId(), order);
         return order.getOrderId();
     }
+
     private synchronized long getNextOrderId() {
         return nextOrderId++;
     }
