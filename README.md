@@ -59,7 +59,7 @@ Spring Boot 기반의 온라인 도서 쇼핑몰 프로젝트입니다.
 
 ##  설정 정보
 
-### MySQL 설정
+MySQL 설정
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/bookmarketdb
@@ -70,7 +70,7 @@ spring.datasource.password=1234
 spring.servlet.multipart.location=C:/upload
 file.uploadDir=C:/upload/
 
-### 실행 방법
+실행 방법
 
 프로젝트 클론
 
