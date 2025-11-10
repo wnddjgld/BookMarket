@@ -25,15 +25,15 @@ public class SecurityConfig{
     }
 
 
-    @Bean
-    protected UserDetailsService users() {
-        UserDetails admin = User.builder()
-                .username("Admin")
-                .password(passwordEncoder().encode("Admin1234"))
-                .roles("ADMIN")
-                .build();
-        return new InMemoryUserDetailsManager(admin);
-    }
+//    @Bean
+//    protected UserDetailsService users() {
+//        UserDetails admin = User.builder()
+//                .username("Admin")
+//                .password(passwordEncoder().encode("Admin1234"))
+//                .roles("ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(admin);
+//    }
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -55,6 +55,8 @@ public class SecurityConfig{
                                 .loginPage("/login") // 사용자 정의 로그인 페이지
                                 .loginProcessingUrl("/login")
                                 .defaultSuccessUrl("/books/add")// 로그인 성공 후 이동 페이지
+                                .defaultSuccessUrl("/order/list")// 관리자 로그인 성공 후 이동 페이지
+                                .defaultSuccessUrl("/")// 일반 사용자 로그인 성공 후 이동 페이지
                                 .failureUrl("/loginfailed") // 로그인 실패 후 이동 페이지
                                 .usernameParameter("username")
                                 .passwordParameter("password")
