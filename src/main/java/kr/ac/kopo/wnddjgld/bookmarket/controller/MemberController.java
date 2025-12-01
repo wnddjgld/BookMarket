@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
     @Autowired
     MemberService memberService;
@@ -40,17 +40,19 @@ public class MemberController {
         try{
             Member member = Member.createMember(memberFormDto, passwordEncoder);
             memberService.saveMember(member);
-        }catch (IllegalStateException e){
+        }
+        catch(IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
             return "member/addMember";
         }
-        return "redirect:/memebers";
+
+        return "redirect:/";
     }
 
-    //회원 수정 폼
-    @GetMapping(value="/update/{memberId}")
+    // 회원 수정 폼
+    @GetMapping(value = "/update/{memberId}")
     public String requestUpdateMemberForm(@PathVariable(name = "memberId") String memberId, Model model) {
-        Member member = memberService.getMemberByMemberId(memberId);
+        Member member = memberService.getMemberById(memberId);
         model.addAttribute("memberFormDto", member);
         return "member/updateMember";
     }
@@ -58,24 +60,29 @@ public class MemberController {
     // 회원 수정 기능 수행
     @PostMapping(value = "/update")
     public String submitUpdateMember(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model) {
+
         if(bindingResult.hasErrors()){
             return "member/updateMember";
         }
+
         try{
             Member member = Member.createMember(memberFormDto, passwordEncoder);
             memberService.saveMember(member);
-        } catch(IllegalStateException e){
+        }
+        catch(IllegalStateException e){
             model.addAttribute("errorMessage", e.getMessage());
             return "member/updateMember";
         }
-        return "redirect:/memebers";
+
+        return "redirect:/members";
     }
 
-//  회원 삭제
+    // 회원 삭제
     @GetMapping(value = "/delete/{memberId}")
-    public String requestDeleteMemberForm(@PathVariable(name = "memberId") String memberId) {
-        memberService.deleteMember(memberId);
+    public String deleteMember(@PathVariable(name = "memberId") String memberId) {
+        memberService.deleteMemberById(memberId);
 
         return "redirect:/logout";
+    }
 }
-}
+ 

@@ -16,24 +16,27 @@ import org.springframework.stereotype.Service;
 public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
 
-//  회원 정보 저장
+    // 회원 정보 저장
     public Member saveMember(Member member) {
+        validateDuplicate(member);
         return memberRepository.save(member);
     }
 
-//  특정 MemberId를 가진 Member Entity 만 반환
-    public Member getMemberByMemberId(String memberId) {
+    // 특정 memberId를 가진 Member Entity만 반환
+    public Member getMemberById(String memberId) {
         return memberRepository.findByMemberId(memberId);
     }
 
-//  Member Entity (회원 정보) 삭제
-    public void deleteMember(String memberId) {
+    // Member Entity (회원 정보) 삭제
+    public void deleteMemberById(String memberId) {
+        // Member member = getMemberById(memberId);
         Member member = memberRepository.findByMemberId(memberId);
         memberRepository.deleteById(member.getNum());
     }
 
-    private void validateDuplicateMember(Member member) {
+    private void validateDuplicate(Member member) {
         Member findMember = memberRepository.findByMemberId(member.getMemberId());
+
         if (findMember != null) {
             throw new IllegalStateException("Duplicate member found");
         }
@@ -42,8 +45,9 @@ public class MemberService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String memberId) throws UsernameNotFoundException {
         Member member = memberRepository.findByMemberId(memberId);
+
         if (member == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("member not found");
         }
         UserDetails userDetails = User.builder()
                 .username(member.getMemberId())
@@ -53,3 +57,4 @@ public class MemberService implements UserDetailsService {
         return userDetails;
     }
 }
+ 
