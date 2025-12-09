@@ -137,7 +137,7 @@ public class OrderController {
         HttpSession session = request.getSession(false);
 
         if (session != null) {
-            session.invalidate();
+            session.removeAttribute("cart");
         }
 
         return "orderFinished";
@@ -148,7 +148,7 @@ public class OrderController {
     public String requestCancelled(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            session.invalidate();
+            session.removeAttribute("cart");
         }
 
         return "orderCancelled";
