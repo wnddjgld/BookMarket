@@ -1,107 +1,132 @@
-# 📖 BookMarket: 도서 쇼핑몰
+# 📖 BookMarket (도서 쇼핑몰 프로젝트)
 
-Spring Boot 기반으로 개발된 간단한 도서 쇼핑몰 프로젝트입니다.
-도서 조회, 장바구니, 주문 처리, 관리자 기능 등을 구현했습니다.
-
----
-
-## 주요 기능
-
-### 📚 도서 (Book)
-* **목록 조회:** 전체 도서 목록을 보여줍니다.
-* **카테고리별 조회:** `IT전문서`, `IT교육교재` 등 특정 카테고리의 도서만 필터링하여 볼 수 있습니다.
-* **상세 정보:** 각 도서의 설명, 저자, 가격 등 상세 정보를 조회할 수 있습니다.
-* **필터링:** 출판사(Publisher)와 분류(Category)를 조합하여 원하는 도서를 검색할 수 있습니다.
-
-### 🔒 관리자 (Admin)
-* **접근 제어:** Spring Security를 사용하여 특정 페이지(` /books/add`, `/order/list` 등)는 관리자만 접근 가능하도록 설정했습니다.
-    * **기본 계정**: ID `Admin`, PW `Admin1234`
-* **도서 관리:** 새로운 도서를 등록하고 관련 이미지를 업로드할 수 있습니다.
-* **입력 유효성 검사:** 도서 등록 시 JPA Validation 및 Spring Custom Validator를 활용하여 다음과 같은 항목을 검증합니다:
-    * `bookId` (ISBN 형식 및 중복 여부)
-    * 가격(`unitPrice`)에 따른 재고(`unitsInStock`) 수량 제한 (예: 10,000원 이상 도서는 100개 미만)
-* **주문 관리:** 전체 주문 목록을 조회하며, **페이징** 및 **정렬**(주문 ID, 고객 ID, 배송지, 총액 기준) 기능을 지원합니다.
-    * 개별 주문의 상세 내역 조회, 배송 정보 수정, 주문 삭제가 가능합니다.
-
-### 🛒 장바구니 (Cart)
-* **세션 기반:** 사용자의 웹 세션을 기준으로 장바구니를 생성하고 관리합니다.
-* **기능:** 장바구니에 도서를 추가하거나 특정 항목을 삭제하고, 전체 항목을 비울 수 있습니다.
-
-### 💳 주문 (Order)
-* **프로세스:** 장바구니에 담긴 상품들을 기반으로 주문을 생성합니다.
-* **정보 입력:** 주문자 정보(Customer)와 배송지 정보(Shipping)를 단계별로 입력받습니다.
-* **주문 확인:** 결제 전, 주문할 도서, 수량, 총액, 고객 정보, 배송 정보를 최종 확인할 수 있는 페이지를 제공합니다.
-* **상태 처리:** 주문 완료 또는 취소 처리가 가능합니다.
-
-### ⚙️ 기타
-* **예외 처리:** `BookIdException`, `CategoryException`, `CartException` 등 비즈니스 로직에 맞는 커스텀 예외를 정의하고, `@ControllerAdvice`를 이용해 일관된 오류 페이지를 사용자에게 보여줍니다.
-* **자원 관리:** 도서 이미지 등 정적 파일은 `static/images` 디렉토리에서 관리하며, 웹 페이지 템플릿은 Thymeleaf를 사용하여 `templates` 폴더 내에서 관리합니다.
+**BookMarket**은 Spring Boot 기반 도서 쇼핑몰 웹 애플리케이션입니다.  
+도서 조회, 회원 관리, 장바구니, 주문 처리, 관리자 기능까지 실제 쇼핑몰 핵심 요소를 학습 및 실무 관점에서 구현한 프로젝트입니다.
 
 ---
 
-## 사용 기술 스택
+## 🛠 Tech Stack
 
-| 영역         | 기술                                                                                              |
-| :----------- | :------------------------------------------------------------------------------------------------ |
-| **Backend** | Java 17, Spring Boot 3.4.3, Spring MVC, Spring Data JPA, Spring Security, Spring Validation |
-| **Frontend** | Thymeleaf, HTML5, Bootstrap 5                                                        |
-| **Database** | MySQL                                                                                   |
-| **Build** | Gradle                                                                                  |
-| **Others** | Lombok                                                                                  |
+### Backend
+| 기술 | 상세 내용 |
+| :--- | :--- |
+| **Java** | JDK 17 |
+| **Framework** | Spring Boot 3.4.3 |
+| **Security** | Spring Security (인증 및 인가) |
+| **Data Access** | Spring Data JPA(회원, 주문), Spring JDBC Template(도서, 장바구니) |
+| **Validation** | Bean Validation + Custom Validator (재고/가격 검증) |
+| **Build Tool** | Gradle 8.12.1 |
+
+### Frontend
+| 기술 | 상세 내용 |
+| :--- | :--- |
+| **Template Engine** | Thymeleaf (Layout Dialect) |
+| **CSS Framework** | Bootstrap 5.3 |
+| **Script** | JavaScript (장바구니, 입력 유효성 검사) |
+
+### Infrastructure & Database
+- **Database:** MySQL 8.x  
+- **File Storage:** Local File System (`C:/upload/`)
 
 ---
 
-## ⚙️ 설정 및 실행 방법
+## ✨ Key Features (주요 기능)
 
-### 1. 사전 준비
-* **Java 17 (JDK)** 설치
-* **MySQL** 데이터베이스 설치 및 실행
-* **Git** 설치
+### 1. 📚 도서 관리 (Book Management)
+- 전체 도서 목록 조회 (페이징)
+- 카테고리 필터링 (IT전문서, IT교육교재 등)
+- 다중 조건 검색 (Matrix Variable 기반)
+- 관리자 기능
+  - 신규 도서 등록 (이미지 업로드)
+  - 도서 수정/삭제
+  - 가격/재고/ISBN 규칙 기반 유효성 검사 + 사용자 정의 검사
 
-### 2. 프로젝트 클론
-```bash
-git clone <repository-url>
-cd BookMarket-1fce37a438622a98dd1f65e1bfcf159aaa744c28
-```
+### 2. 🛒 장바구니 (Cart)
+- 세션 기반 장바구니 (로그인 여부와 관계없이 유지)
+- 장바구니 담기, 수량 변경, 삭제, 전체 비우기
+- 실시간 가격 계산 (소계/총액)
 
-### 3. 설정 파일 수정
+### 3. 💳 주문 프로세스 (Order Process)
+- 주문 단계:  
+  `고객 정보 입력 → 배송 정보 입력 → 주문 확정 → 주문 완료`
+- 주문 시점 재고 검증 및 차감 처리 (OrderService)
+- 주문 취소 시 롤백
 
-`src/main/resources/application.properties` 파일을 열어 본인 환경에 맞게 수정합니다.
+### 4. 👤 회원 시스템 (Member System)
+- 회원가입 (중복 ID 검사 포함)
+- 로그인/로그아웃 (Spring Security)
+- 권한 분리 (USER / ADMIN)
+- 내 정보 수정 및 회원 탈퇴
 
-**데이터베이스 연결 정보:**
+### 5. 🛠 관리자 모드 (Admin)
+- URL 기반 접근 제어 (Spring Security)
+- 주문 목록 조회 (페이징/정렬)
+- 배송지 수정 기능
+
+---
+
+## 💾 Database Schema & Configuration
+
+### 주요 테이블
+- **Book** — 도서 정보 (`b_bookId`)
+- **Member** — 회원 정보 (`num`, unique: `memberId`)
+- **Orders** — 주문 기본 정보
+- **Customer / Shipping / Address** — 주문 부가 정보
+
+### application.properties 예시
 
 ```properties
+# MySQL 설정
 spring.datasource.url=jdbc:mysql://localhost:3306/bookmarketdb
-spring.datasource.username=wnddjgld
-spring.datasource.password=1234
-```
+spring.datasource.username=사용자명
+spring.datasource.password=비밀번호
 
-**파일 업로드 경로** (실제 존재하는 디렉토리 경로로 변경)
-
-```properties
-spring.servlet.multipart.location=C:/upload
+# 파일 업로드 경로
 file.uploadDir=C:/upload/
-```
+spring.servlet.multipart.location=C:/upload
 
----
+🚀 How to Run
 
-### 4. 데이터베이스 스키마 생성
+1. 사전 준비
 
-MySQL 클라이언트를 이용해 아래 명령어를 실행합니다.
+-   Java 17 설치
+-   MySQL 설치 후 DB 생성
 
-```sql
 CREATE DATABASE bookmarketdb;
-```
 
-> 테이블은 Spring Data JPA의 `ddl-auto=update` 설정에 따라  
-> 애플리케이션 실행 시 자동으로 생성/업데이트됩니다.
+-   이미지 업로드 폴더 생성 C:/upload/
 
----
+------------------------------------------------------------------------
 
-### 5. 접속 확인
+2. 빌드 및 실행
 
-웹 브라우저에서 아래 주소로 접속합니다.
+Repository Clone
 
-```
-http://localhost:8080/BookMarket/home
-```
+git clone
+
+Build
+
+./gradlew build
+
+Run
+
+./gradlew bootRun
+
+------------------------------------------------------------------------
+
+3. 접속 경로
+
+-   메인 페이지: http://localhost:8080/BookMarket/home
+
+-   로그인 페이지: http://localhost:8080/BookMarket/login
+
+------------------------------------------------------------------------
+
+📂 Project Structure
+
+src/main/java/kr/ac/kopo/wnddjgld/bookmarket ├── config # Security,
+Resource, Validation 설정 ├── controller # MVC Controllers (Book, Cart,
+Order, Member…) ├── domain # Entity & DTO (Book, Member, Order…) ├──
+exception # Custom Exception & Global Handler ├── repository # JPA
+Repository & JDBC Template Impl ├── service # Business Logic └──
+validator # Custom Validators
